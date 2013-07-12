@@ -1,0 +1,19 @@
+.fancy_list {
+  list-style: none;
+  margin: 10px 0 0 0;
+}
+
+.fancy_list li {
+    padding: 10px 0;
+    border-top: 1px solid #7c7c7c;
+    margin-bottom:0;
+    /*height: 100px;*/
+}
+
+/*.fancy_list li div {
+	position: absolute;
+}
+*/
+.item {
+	background-color:#00FF00;
+}

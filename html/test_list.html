@@ -1,0 +1,22 @@
+<div class="span5">
+    <ul class="fancy_list" id="test_list">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+	var list = document.getElementById( "test_list" );
+	console.log( list );
+
+	for ( var i = 0; i < list.children.length; i++ ) {
+		var listElement = list.children[ i ];
+
+		var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv"], [{"name":"Marine", "stats":[4,4,4,4,1,4,1,8,"3+"]},{"name":"Fire Warrior","stats":[2,3,3,3,1,2,1,7,"4+"]}] );
+		uv.addDomElements();
+	}
+</script>
