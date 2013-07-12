@@ -1,5 +1,5 @@
-<div class="span5">
-    <ul class="fancy_list" id="test_list">
+<div>
+    <ul class="fancy_list span5" id="test_list">
       <li></li>
       <li></li>
       <li></li>
@@ -16,7 +16,34 @@
 	for ( var i = 0; i < list.children.length; i++ ) {
 		var listElement = list.children[ i ];
 
-		var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv"], [{"name":"Marine", "stats":[4,4,4,4,1,4,1,8,"3+"]},{"name":"Fire Warrior","stats":[2,3,3,3,1,2,1,7,"4+"]}] );
-		uv.addDomElements();
+    if ( i % 2 == 0 ) {
+		  var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [{"name":"Marine", "stats":[4,4,4,4,1,4,1,8,"3+", 18]}] );
+		  uv.addDomElements();
+
+      // $( listElement ).hide();
+    } else {
+      var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [{"name":"Fire Warrior","stats":[2,3,3,3,1,2,1,7,"4+", 12]}] );
+      uv.addDomElements();
+
+      // $( listElement ).hide();
+    }
 	}
+
+  // list.style.marginLeft = "-1000px";
+  // $( list ).animate( {
+  //   marginLeft: "10px"
+  // }, 3500 );
+  for ( var i = 0; i < list.children.length; i++ ) {
+    var listElement = list.children[ i ];
+
+    listElement.style.marginLeft = "-1000px";
+    listElement.style.width = "1000px";
+    listElement.style.opacity = 0.0;
+
+      $( list.children[ i ] ).delay( i * 150 ).animate( {
+          marginLeft: "10px",
+          opacity: 1.5
+      }, 1000 );
+  }
+
 </script>

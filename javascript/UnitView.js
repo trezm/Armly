@@ -1,5 +1,7 @@
 var TITLE_PERCENTAGE = 20;
-
+var HEADER_COLOR = "#777777";
+var STAT_COLOR = "#d6d6d6";
+var NAME_COLOR = "#777777";
 
 function UnitView( domElement, headers, units ) {
 	this.domElement = domElement;
@@ -14,8 +16,9 @@ UnitView.prototype.addDomElements = function() {
 	unitNames.style.width = TITLE_PERCENTAGE + "%";
 	unitNames.style.textAlign = "left";
 
+	unitNames.appendChild( document.createElement( 'br' ) );
 	for ( var i = 0; i < this.units.length; i++ ) {
-		unitNames.innerHTML += "</br>" + this.units[ i ].name;
+		unitNames.appendChild( this.getDefaultName( this.units[ i ].name ) );
 	}
 	this.domElement.appendChild( unitNames );
 
@@ -27,9 +30,9 @@ UnitView.prototype.addDomElements = function() {
 		var div = this.getDefaultDiv();
 		div.style.width = widthPercentage + "%";
 
-		div.innerHTML = header + "</br>";
+		div.appendChild( this.getDefaultHeader( header ) );
 		for ( var j = 0; j < this.units.length; j++ ) {
-			div.innerHTML += this.units[ j ].stats[ i ] + "</br>";
+			div.appendChild( this.getDefaultStat( this.units[ j ].stats[ i ] ) );
 		}
 
 		this.domElement.appendChild( div );
@@ -51,5 +54,26 @@ UnitView.prototype.getDefaultDiv = function() {
 };
 
 UnitView.prototype.getDefaultHeader = function( headerString ) {
+	var div = document.createElement( 'div' );
+	div.innerHTML = headerString;
+	div.style.color = HEADER_COLOR;
 
+	return div;
 };
+
+UnitView.prototype.getDefaultStat = function( stat ) {
+	var div = document.createElement( 'div' );
+	div.innerHTML = stat;
+	div.style.color = STAT_COLOR;
+
+	return div
+};
+
+UnitView.prototype.getDefaultName = function( name ) {
+	var div = document.createElement( 'div' );
+	div.innerHTML = name;
+	div.style.color = NAME_COLOR;
+
+	return div
+};
+
