@@ -13,16 +13,20 @@
 	var list = document.getElementById( "test_list" );
 	console.log( list );
 
+  var captain = new Unit( "Space Marine Captain", [4,4,4,4,1,4,2,8,"3+", 18], {} );
+  var spaceMarine = new Unit( "Space Marine", [4,4,4,4,1,4,1,8,"3+", 18], {} );
+  var fireWarrior = new Unit( "Fire Warrior", [2,3,3,3,1,2,1,7,"4+", 12], {} );
+
 	for ( var i = 0; i < list.children.length; i++ ) {
 		var listElement = list.children[ i ];
 
     if ( i % 2 == 0 ) {
-		  var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [{"name":"Marine", "stats":[4,4,4,4,1,4,1,8,"3+", 18]}] );
+		  var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [captain, spaceMarine] );
 		  uv.addDomElements();
 
       // $( listElement ).hide();
     } else {
-      var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [{"name":"Fire Warrior","stats":[2,3,3,3,1,2,1,7,"4+", 12]}] );
+      var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [fireWarrior] );
       uv.addDomElements();
 
       // $( listElement ).hide();
