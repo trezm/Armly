@@ -5,9 +5,8 @@ function OptionView( option, optionColor ) {
 	this.optionColor = optionColor ? optionColor : OPTION_COLOR;
 	this.selector;
 
-	if ( this.option.min == 0 && this.option.max == 1 ) {
-		var container = document.createElement( 'div' );
-
+	var container = document.createElement( 'div' );
+	if ( this.option.optionType == O_Type.CHECKBOX ) {
 		var checkbox = document.createElement( 'input' );
 		checkbox.style.cssFloat = "left";
 		checkbox.type = "checkbox";
@@ -25,23 +24,70 @@ function OptionView( option, optionColor ) {
 		container.appendChild( checkbox );
 		container.appendChild( name );
 
-		this.domElement = container;
 		this.selector = checkbox;
+	} else if ( this.option.optionType == O_Type.COUNTER ) {
+		var inc = document.createElement( 'input' );
+		inc.style.cssFloat = "left";
+		inc.type = "button";
+		inc.optionView = this;
+		inc.value = "Increase";
+		inc.onclick = function( e ) {
+			this.optionView.increaseOption( e );
+		}
+
+		var dec = document.createElement( 'input' );
+		dec.style.cssFloat = "left";
+		dec.type = "button";
+		dec.optionView = this;
+		dec.value = "Decrease";
+		dec.onclick = function( e ) {
+			this.optionView.decreaseOption( e );
+		}
+
+		var count = document.createElement( 'div' );
+		count.style.marginLeft = "10px";
+		count.style.marginRight = "10px";
+		count.style.cssFloat = "left";
+		count.style.color = this.optionColor;
+		count.innerHTML = this.option.currentCount + "x ";
+
+		var name = document.createElement( 'div' );
+		name.style.color = this.optionColor;
+		name.innerHTML = this.option.name;
+
+		container.appendChild( inc );
+		container.appendChild( dec );
+		container.appendChild( count );
+		container.appendChild( name );
+		container.style.marginTop = "10px";
+		container.style.marginBottom = "10px";
+
+		this.selector = count;
 	}
 
-	this.updateOption();
+	this.domElement = container;
 }
 
-OptionView.prototype.updateOption = function() {
+OptionView.prototype.increaseOption = function( e ) {
+	this.onOptionUpdate( this, this.option, {"increase" : true} );
+};
+
+OptionView.prototype.decreaseOption = function( e ) {
+	this.onOptionUpdate( this, this.option, {"increase" : false} );
+}
+
+OptionView.prototype.updateOption = function( flags ) {
 	if ( this.option.optionType == O_Type.CHECKBOX ) {
 		if ( this.selector.checked ) {
 			this.option.currentCount = 1;
 		} else {
 			this.option.currentCount = 0;			
 		}
+	} else if ( this.option.optionType == O_Type.COUNTER ) {
+
 	}
 
-	this.onOptionUpdate( this, this.option );
+	this.onOptionUpdate( this, this.option, flags );
 };
 
 OptionView.prototype.onOptionUpdate = function( optionView, option ) {};

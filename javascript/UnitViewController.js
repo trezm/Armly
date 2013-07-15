@@ -42,7 +42,6 @@ UnitViewController.prototype.recalculatePoints = function() {
 
 		for ( var j = 0; j < optionGroup.options.length; j++ ) {
 			var option = optionGroup.options[ j ];
-			console.log( "Option: " + option.name + " (" + option.currentCount + ")" ); 
 
 			this.unitCost += option.currentCount * option.cost;
 		}

@@ -5,20 +5,33 @@
 
 .fancy_list li {
     padding: 10px 0;
-    border-top: 1px solid #afafaf;
+    /*border-top: 1px solid #afafaf;*/
     margin-bottom:0;
     font-family:"Arial Narrow";
     /*height: 100px;*/
 }
 
 .fancy_list li:last-child {
-    border-bottom: 1px solid #afafaf;
+    /*border-bottom: 1px solid #afafaf;*/
 }
 
-/*.fancy_list li div {
-	position: absolute;
+.unit {
+  border-bottom: 1px solid #afafaf;
 }
-*/
+
+.option {
+  border-left: 1px solid #afafaf;
+}
+
+.option:last-child {
+  border-bottom: 1px solid #afafaf;
+}
+
+.option > div {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .item {
 	background-color:#00FF00;
 }

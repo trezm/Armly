@@ -25,6 +25,20 @@ Option.prototype.optionValueChanged = function() {
 	this.group.optionChanged( this );
 }
 
+Option.prototype.setCount = function( newCount ) {
+	var groupMax = this.group.maxConcurrent;
+	var groupCurrent = 0;
+	for ( var i = 0; i < this.group.options.length; i++ ) {
+		var option = this.group.options[ i ];
+		groupCurrent += option.currentCount;
+	}
+	groupCurrent += newCount - this.currentCount;
+
+	if ( newCount < this.max + 1 && newCount > this.min - 1 && groupCurrent < groupMax + 1 ) {
+		this.currentCount = newCount;
+	}
+}
+
 Option.prototype.setDisabled = function() {
 	this.disabled = true;
 };

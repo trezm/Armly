@@ -3,7 +3,7 @@ var OPTION_INSET = 10;
 var HEADER_COLOR = "#777777";
 var STAT_COLOR = "#d6d6d6";
 var NAME_COLOR = "#777777";
-var TOP_COLOR = "#333333";
+var TOP_COLOR = "#555555";
 
 function UnitView( domElement, headers, units ) {
 	this.domElement = domElement;
@@ -28,6 +28,10 @@ UnitView.prototype.addDomElements = function() {
 	top.appendChild( this.unitCostContainer );
 	this.domElement.appendChild( top );
 
+	// Add the unit container
+	var unitContainer = document.createElement( 'div' );
+	unitContainer.className = "unit";
+
 	// Add just the unit names
 	var unitNames = this.getDefaultDiv();
 	unitNames.style.cssFloat = "left";
@@ -38,7 +42,7 @@ UnitView.prototype.addDomElements = function() {
 	for ( var i = 0; i < this.units.length; i++ ) {
 		unitNames.appendChild( this.getDefaultName( this.units[ i ].name ) );
 	}
-	this.domElement.appendChild( unitNames );
+	unitContainer.appendChild( unitNames );
 
 	// Add the unit stats
 	var widthPercentage = (100 - TITLE_PERCENTAGE) / this.headers.length;
@@ -53,12 +57,14 @@ UnitView.prototype.addDomElements = function() {
 			div.appendChild( this.getDefaultStat( this.units[ j ].stats[ i ] ) );
 		}
 
-		this.domElement.appendChild( div );
+		unitContainer.appendChild( div );
 	}
 
 	var lastElement = document.createElement( 'div' );
 	lastElement.style.clear = "both";
-	this.domElement.appendChild( lastElement );
+
+	unitContainer.appendChild( lastElement );
+	this.domElement.appendChild( unitContainer );
 };
 
 UnitView.prototype.setUnitCost = function( unitCost ) {

@@ -13,13 +13,15 @@
 	var list = document.getElementById( "test_list" );
 	console.log( list );
 
-  var chainsword = new Option( "Chainsword", "Counts as a close combat weapon", 0, 1, 0, 5 );
-  var missileLauncher = new Option( "Missile Launcher", "PEW PEW!!", 0, 1, 0, 15 );
-  var spaceMarineGroup = new OptionGroup( "Weapons", 1, [chainsword, missileLauncher] );
-  missileLauncher.group = spaceMarineGroup;
-  chainsword.group = spaceMarineGroup;
+  var chainsword = new Option( "Chainsword", "Counts as a close combat weapon", 0, 5, 0, 5 );
+  var missileLauncher = new Option( "Missile Launcher", "PEW PEW!!", 0, 5, 0, 15 );
+  var spaceMarineGroup = new OptionGroup( "Weapons", 5, [chainsword, missileLauncher] );
 
-  var captain = new Unit( "Space Marine Captain", [4,4,4,4,1,4,2,8,"3+"], [spaceMarineGroup], 0, 1, 1, 18 );
+  var powerWeapon = new Option( "Power Weapon", "No armor saves, whaaat?", 0, 1, 0, 10 );
+  var ironHalo = new Option( "Iron Halo", "Grants a 4+ invulnerable", 0, 1, 0, 25 );
+  var spaceMarineGroup2 = new OptionGroup( "Other things", -1, [powerWeapon, ironHalo] );
+
+  var captain = new Unit( "Space Marine Captain", [4,4,4,4,1,4,2,8,"3+"], [spaceMarineGroup, spaceMarineGroup2], 0, 1, 1, 18 );
   var spaceMarine = new Unit( "Space Marine", [4,4,4,4,1,4,1,8,"3+"], [], 5, 15, 5, 15 );
 
   var fireWarriorGroup = new OptionGroup( "Nothing", 1, [] );
