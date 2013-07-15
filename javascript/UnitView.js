@@ -1,7 +1,9 @@
 var TITLE_PERCENTAGE = 20;
+var OPTION_INSET = 10;
 var HEADER_COLOR = "#777777";
 var STAT_COLOR = "#d6d6d6";
 var NAME_COLOR = "#777777";
+var TOP_COLOR = "#333333";
 
 function UnitView( domElement, headers, units ) {
 	this.domElement = domElement;
@@ -10,6 +12,22 @@ function UnitView( domElement, headers, units ) {
 }
 
 UnitView.prototype.addDomElements = function() {
+	// Create the total cost in the upper left and the unit count in
+	// the upper right.
+	var unitCost = 0;
+	var unitSize = 0;
+
+	var top = document.createElement( 'div' );
+	this.unitCostContainer = document.createElement( 'div' );
+	this.unitCostContainer.style.cssFloat = "left";
+	this.unitCostContainer.style.width = "100%";
+	this.unitCostContainer.style.color = TOP_COLOR;
+	this.unitCostContainer.innerHTML = "Total Pts: " + unitCost;
+ 
+
+	top.appendChild( this.unitCostContainer );
+	this.domElement.appendChild( top );
+
 	// Add just the unit names
 	var unitNames = this.getDefaultDiv();
 	unitNames.style.cssFloat = "left";
@@ -42,6 +60,10 @@ UnitView.prototype.addDomElements = function() {
 	lastElement.style.clear = "both";
 	this.domElement.appendChild( lastElement );
 };
+
+UnitView.prototype.setUnitCost = function( unitCost ) {
+	this.unitCostContainer.innerHTML = "Total Pts: " + unitCost;
+}
 
 UnitView.prototype.getDefaultDiv = function() {
 	var div = document.createElement( 'div' );

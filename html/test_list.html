@@ -2,10 +2,10 @@
     <ul class="fancy_list span5" id="test_list">
       <li></li>
       <li></li>
+<!--       <li></li>
       <li></li>
       <li></li>
-      <li></li>
-      <li></li>
+      <li></li> -->
     </ul>
 </div>
 
@@ -13,20 +13,28 @@
 	var list = document.getElementById( "test_list" );
 	console.log( list );
 
-  var captain = new Unit( "Space Marine Captain", [4,4,4,4,1,4,2,8,"3+", 18], {} );
-  var spaceMarine = new Unit( "Space Marine", [4,4,4,4,1,4,1,8,"3+", 18], {} );
-  var fireWarrior = new Unit( "Fire Warrior", [2,3,3,3,1,2,1,7,"4+", 12], {} );
+  var chainsword = new Option( "Chainsword", "Counts as a close combat weapon", 0, 1, 0, 5 );
+  var missileLauncher = new Option( "Missile Launcher", "PEW PEW!!", 0, 1, 0, 15 );
+  var spaceMarineGroup = new OptionGroup( "Weapons", 1, [chainsword, missileLauncher] );
+  missileLauncher.group = spaceMarineGroup;
+  chainsword.group = spaceMarineGroup;
+
+  var captain = new Unit( "Space Marine Captain", [4,4,4,4,1,4,2,8,"3+"], [spaceMarineGroup], 0, 1, 1, 18 );
+  var spaceMarine = new Unit( "Space Marine", [4,4,4,4,1,4,1,8,"3+"], [], 5, 15, 5, 15 );
+
+  var fireWarriorGroup = new OptionGroup( "Nothing", 1, [] );
+  var fireWarrior = new Unit( "Fire Warrior", [2,3,3,3,1,2,1,7,"4+"], [], 6, 12, 12, 12 );
 
 	for ( var i = 0; i < list.children.length; i++ ) {
 		var listElement = list.children[ i ];
 
     if ( i % 2 == 0 ) {
-		  var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [captain, spaceMarine] );
-		  uv.addDomElements();
+      var uvc = new UnitViewController( [captain, spaceMarine], ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+      uvc.loadDOM();
 
       // $( listElement ).hide();
     } else {
-      var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv", "Pts"], [fireWarrior] );
+      var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv"], [fireWarrior] );
       uv.addDomElements();
 
       // $( listElement ).hide();
