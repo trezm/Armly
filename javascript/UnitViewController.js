@@ -37,11 +37,14 @@ UnitViewController.prototype.recalculatePoints = function() {
 		allOptions = allOptions.concat( this.units[ i ].options );
 	}
 
+	console.log( "===Options===" );
 	for ( var i = 0; i < allOptions.length; i++ ) {
 		var optionGroup = allOptions[ i ];
 
 		for ( var j = 0; j < optionGroup.options.length; j++ ) {
 			var option = optionGroup.options[ j ];
+
+			console.log( "Unit option: " + option.name + " (" + option.currentCount + ")" );
 
 			this.unitCost += option.currentCount * option.cost;
 		}

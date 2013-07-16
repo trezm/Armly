@@ -11,6 +11,7 @@ function OptionView( option, optionColor ) {
 		checkbox.style.cssFloat = "left";
 		checkbox.type = "checkbox";
 		checkbox.optionView = this;
+		this.option.currentCount == 1 ? checkbox.checked = true : checkbox.checked = false;
 		checkbox.onchange = function( e ) {
 			this.optionView.updateOption();
 			// this.checked ? this.optionView.setEnabled() : this.optionView.setDisabled();

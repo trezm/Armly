@@ -72,7 +72,7 @@ OptionViewController.prototype.optionUpdated = function( optionView, option, fla
 				// Set up the view stuff
 				var otherOptionView = relationship.relationship.view;
 				otherOptionView.selector.disabled = optionView.selector.checked;
-
+				i_option.currentCount = 0;
 			} else {
 				// Alter the option model
 				if ( optionView.selector.checked ) {
@@ -86,7 +86,8 @@ OptionViewController.prototype.optionUpdated = function( optionView, option, fla
 	// This code handles infinite selection (checkboxes that don't influence each other)
 	} else if ( optionGroup.maxConcurrent < 0 ) {
 		// Pretty much do nothing
-
+		optionView.selector.checked ? option.currentCount = 1 : option.currentCount = 0;
+		
 	// This code handles when there is a limit effected by other selections
 	} else {
 		if ( flags.increase ) {
