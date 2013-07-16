@@ -36,8 +36,8 @@
 
       // $( listElement ).hide();
     } else {
-      var uv = new UnitView( listElement, ["WS","BS","S","T","W","I","A","Ld","Sv"], [fireWarrior] );
-      uv.addDomElements();
+      var uvc = new UnitViewController( [fireWarrior], ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+      uvc.loadDOM();
 
       // $( listElement ).hide();
     }

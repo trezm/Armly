@@ -77,16 +77,6 @@ OptionView.prototype.decreaseOption = function( e ) {
 }
 
 OptionView.prototype.updateOption = function( flags ) {
-	if ( this.option.optionType == O_Type.CHECKBOX ) {
-		if ( this.selector.checked ) {
-			this.option.currentCount = 1;
-		} else {
-			this.option.currentCount = 0;			
-		}
-	} else if ( this.option.optionType == O_Type.COUNTER ) {
-
-	}
-
 	this.onOptionUpdate( this, this.option, flags );
 };
 

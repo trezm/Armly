@@ -11,3 +11,9 @@ function Unit( name, stats, options, minSize, maxSize, currentSize, cost ) {
 	this.currentSize = currentSize;
 	this.cost = cost;
 }
+
+Unit.prototype.setUnitSize = function( newSize ) {
+	if ( newSize < this.maxSize + 1 && newSize > this.minSize - 1 ) {
+		this.currentSize = newSize;
+	}
+};

@@ -6,7 +6,7 @@ function UnitViewController( units, headers, defaultDOMElement ) {
 
 UnitViewController.prototype.loadDOM = function() {
 	// Load the unit view
-	this.unitView = new UnitView( this.contentView, this.headers, this.units );
+	this.unitView = new UnitView( this.contentView, this.headers, this.units, this );
 	this.unitView.addDomElements();
 
 	this.recalculatePoints();
@@ -48,4 +48,17 @@ UnitViewController.prototype.recalculatePoints = function() {
 	}
 
 	this.unitView.setUnitCost( this.unitCost );
+	this.unitView.refreshUnitSize();
+};
+
+UnitViewController.prototype.increaseUnitSize = function( unit ) {
+	unit.setUnitSize( unit.currentSize + 1 );
+
+	this.recalculatePoints();
+};
+
+UnitViewController.prototype.decreaseUnitSize = function( unit ) {
+	unit.setUnitSize( unit.currentSize - 1 );
+
+	this.recalculatePoints();
 };
