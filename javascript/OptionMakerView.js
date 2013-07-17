@@ -1,0 +1,13 @@
+function OptionMakerView( option ) {
+	this.option = option;
+}
+
+OptionMakerView.prototype.getDOMElement = function() {
+	if ( this.domElement ) {
+		return this.domElement;
+	}
+
+	this.domElement = document.createElement( 'div' );
+
+	return this.domElement;
+};
