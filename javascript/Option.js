@@ -26,8 +26,9 @@ Option.prototype.optionValueChanged = function() {
 }
 
 Option.prototype.setCount = function( newCount ) {
-	var groupMax = this.group.maxConcurrent;
+	var groupMax = this.group.getMaxConcurrent();
 	var groupCurrent = 0;
+
 	for ( var i = 0; i < this.group.options.length; i++ ) {
 		var option = this.group.options[ i ];
 		groupCurrent += option.currentCount;

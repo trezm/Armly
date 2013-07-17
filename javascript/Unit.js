@@ -6,6 +6,10 @@ function Unit( name, stats, options, minSize, maxSize, currentSize, cost ) {
 	this.name = name;
 	this.stats = stats;
 	this.options = options;
+	for ( var i = 0; i < this.options.length; i++ ) {
+		this.options[ i ].setUnit( this );
+	}
+
 	this.minSize = minSize;
 	this.maxSize = maxSize;
 	this.currentSize = currentSize;
