@@ -58,3 +58,17 @@ OptionGroup.prototype.getMaxConcurrent = function() {
 		return this.unit.currentSize;
 	}
 };
+
+OptionGroup.prototype.toJSON = function() {
+	var optionList = []
+	for ( var i = 0; i < this.options.length; i++ ) {
+		optionList.push( this.options[ i ].toJSON() );
+	}
+
+	return {
+		"name":this.name,
+		"maxConcurrent":this.maxConcurrent,
+		"rule":this.rule,
+		"options":optionList
+	}
+}

@@ -16,8 +16,30 @@ function Unit( name, stats, options, minSize, maxSize, currentSize, cost ) {
 	this.cost = cost;
 }
 
+Unit.prototype.addOptionGroup = function( optionGroup ) {
+	this.options.push( optionGroup );
+}
+
 Unit.prototype.setUnitSize = function( newSize ) {
 	if ( newSize < this.maxSize + 1 && newSize > this.minSize - 1 ) {
 		this.currentSize = newSize;
 	}
 };
+
+Unit.prototype.toJSON = function() {
+	var optionsGroupList = []
+
+	for ( var i = 0; i < this.options.list; i++ ) {
+		optionsGroupList.push( this.options[ i ].toJSON() );
+	}
+
+	return {
+		"name":this.name,
+		"stats":this.stats,
+		"minSize":this.minSize,
+		"maxSize":this.maxSize,
+		"currentSize":this.currentSize,
+		"cost":this.cost,
+		"options":optionsGroupList
+	}
+}

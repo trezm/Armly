@@ -47,3 +47,14 @@ Option.prototype.setDisabled = function() {
 Option.prototype.setEnabled = function() {
 	this.disabled = false;
 }
+
+Option.prototype.toJSON = function() {
+	return {
+		"name":this.name,
+		"description":this.description,
+		"min":this.min,
+		"max":this.max,
+		"currentCount":this.currentCount,
+		"cost":this.cost
+	}
+}

@@ -1,4 +1,4 @@
-function OptionGroupMakerView( optionGroup ) {
+function OptionGroupMakerView( makerViewController ) {
 	this.optionGroup = optionGroup;
 }
 

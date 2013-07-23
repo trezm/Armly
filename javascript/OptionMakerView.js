@@ -1,4 +1,4 @@
-function OptionMakerView( option ) {
+function OptionMakerView( makerViewController ) {
 	this.option = option;
 }
 
