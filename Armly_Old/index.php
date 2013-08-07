@@ -4,6 +4,6 @@
 	<?php include 'html/header.html';?>
 
 	<body>
-		<?php include 'html/test_maker.html';?>
+		<?php include 'html/test_list.html';?>
 	</body>
 </html>

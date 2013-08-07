@@ -29,7 +29,7 @@ Unit.prototype.setUnitSize = function( newSize ) {
 Unit.prototype.toJSON = function() {
 	var optionsGroupList = []
 
-	for ( var i = 0; i < this.options.list; i++ ) {
+	for ( var i = 0; i < this.options.length; i++ ) {
 		optionsGroupList.push( this.options[ i ].toJSON() );
 	}
 

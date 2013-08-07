@@ -1,7 +1,7 @@
 var Rules = {
-	"NORMAL" : "NORMAL",
-	"ONEINX" : "ONEINX",
-	"ALLORNOTHING" : "ALLORNOTHING"
+	"NORMAL" : "Normal",
+	"ONEINX" : "One in X",
+	"ALLORNOTHING" : "All or Nothing"
 }
 
 function OptionGroup( name, maxConcurrent, options, rule ) {
@@ -26,6 +26,10 @@ function OptionGroup( name, maxConcurrent, options, rule ) {
 OptionGroup.prototype.addOption = function( option ) {
 	this.options.push( option );
 };
+
+OptionGroup.prototype.removeOptionAtIndex = function( optionIndex ) {
+	this.options.splice( optionIndex, 1 );
+}
 
 OptionGroup.prototype.optionChanged = function( option ) {
 	if ( option.optionType == O_Type.CHECKBOX ) {
