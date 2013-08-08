@@ -1,0 +1,140 @@
+<input type="text" id="username">User Name</input>
+<input type="text" id="listname">List Name</input>
+<button type="button" onclick="showList()">Load List</button>
+
+<div>
+    <ul class="fancy_list span5" id="test_list">
+<!--       <li></li>
+      <li></li>
+      <li></li>
+      <li></li> -->
+    </ul>
+</div>
+
+<script type="text/javascript">
+	var list = document.getElementById( "test_list" );
+
+  function showList() {
+    list.innerHTML = "";
+    var username = document.getElementById( "username" );
+    var listname = document.getElementById( "listname" );
+
+    requestJSON( username.value, listname.value );
+  }
+
+  function requestJSON( username, listname ) {
+    // Make an XML request
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp = new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("GET","armylist/" + escape( username ) + "/" + escape( listname ),false);
+    xmlhttp.onreadystatechange = function() {
+      if ( xmlhttp.readyState == 4 ) {
+        xmlDoc = xmlhttp.responseText;
+
+        translateJSONToUnitGroups( xmlDoc );
+      }
+    }
+    xmlhttp.send();
+  }
+
+  function translateJSONToUnitGroups( JSONText ) {
+    var JSONObject = JSON.parse( JSONText );
+
+    if ( JSONObject[ 'response' ] == "success" ) {
+      var results = JSONObject[ 'results' ];
+      var unitGroups = [];
+
+      for ( var i = 0; i < results.length; i++ ) {
+        var armyList = results[ i ][ 'list' ];
+
+        for ( var j = 0; j < armyList.length; j++ ) {
+          var unitGroupDict = armyList[ j ];
+          var group = new UnitGroup( [], 
+                                     unitGroupDict[ 'statHeaders' ], 
+                                     unitGroupDict[ 'groupName' ],
+                                     unitGroupDict[ 'groupType' ] );
+          for ( var u = 0; u < unitGroupDict[ "units" ].length; u++ ) {
+            var unit = unitGroupDict[ "units" ][ u ];
+
+            var unitObject = new Unit( unit[ 'name' ],
+                                       unit[ 'stats' ],
+                                       [],
+                                       unit[ 'minSize' ],
+                                       unit[ 'maxSize' ],
+                                       unit[ 'currentSize' ],
+                                       unit[ 'cost' ] );
+            group.units.push( unitObject );
+          }
+
+          unitGroups.push( group );
+        }
+      }
+
+      for ( var i = 0; i < unitGroups.length; i++ ) {
+        var listElement = document.createElement( 'li' );
+        list.appendChild( listElement );
+
+        var unitGroup = unitGroups[ i % unitGroups.length ];
+
+        var uvc = new UnitViewController( unitGroup, ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+        uvc.loadDOM();
+      }
+    }
+
+    // Animate everything!
+  for ( var i = 0; i < list.children.length; i++ ) {
+    var listElement = list.children[ i ];
+
+    listElement.style.marginLeft = "-1000px";
+    listElement.style.width = "1000px";
+    listElement.style.opacity = 0.0;
+
+      $( list.children[ i ] ).delay( i * 150 ).animate( {
+          marginLeft: "10px",
+          opacity: 1.5
+      }, 1000 );
+    }
+  }
+
+  // var chainsword = new Option( "Chainsword", "Counts as a close combat weapon", 0, 15, 0, 5 );
+  // var missileLauncher = new Option( "Missile Launcher", "PEW PEW!!", 0, 15, 0, 15 );
+  // var spaceMarineGroup = new OptionGroup( "Weapons", 1, [chainsword, missileLauncher], { "type" : Rules.ALLORNOTHING, "value" : 0 } );
+
+  // var powerWeapon = new Option( "Power Weapon", "No armor saves, whaaat?", 0, 1, 1, 10 );
+  // var ironHalo = new Option( "Iron Halo", "Grants a 4+ invulnerable", 0, 1, 0, 25 );
+  // var spaceMarineGroup2 = new OptionGroup( "Other things", -1, [powerWeapon, ironHalo] );
+
+  // var captain = new Unit( "Space Marine Captain", [4,4,4,4,1,4,2,8,"3+"], [spaceMarineGroup2], 0, 1, 1, 18 );
+  // var spaceMarine = new Unit( "Space Marine", [4,4,4,4,1,4,1,8,"3+"], [spaceMarineGroup], 5, 15, 5, 15 );
+
+  // var fireWarriorGroup = new OptionGroup( "Nothing", 1, [] );
+  // var fireWarrior = new Unit( "Fire Warrior", [2,3,3,3,1,2,1,7,"4+"], [], 6, 12, 12, 12 );
+
+	// for ( var i = 0; i < list.children.length; i++ ) {
+	// 	var listElement = list.children[ i ];
+
+ //    if ( i % 2 == 0 ) {
+ //      // var uvc = new UnitViewController( [captain, spaceMarine], ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+ //      // uvc.loadDOM();
+
+ //      // $( listElement ).hide();
+ //    } else {
+ //      // var uvc = new UnitViewController( [fireWarrior], ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+ //      // uvc.loadDOM();
+
+ //      // $( listElement ).hide();
+ //    }
+	// }
+
+  // list.style.marginLeft = "-1000px";
+  // $( list ).animate( {
+  //   marginLeft: "10px"
+  // }, 3500 );
+
+</script>

@@ -1,0 +1,9 @@
+{
+  "name": "ArmlyServer",
+  "description": "A backend server for the armly army building web app",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.x",
+    "mongojs": "0.7.10"
+  }
+}
