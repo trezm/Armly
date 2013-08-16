@@ -5,14 +5,21 @@
 </div>
 
 <div class="left_bar">
-    blah blah blah
+  <div>
+    Username:
+    <input type="text" id="username" class="user_info_field"></input>
+  </div>
+  <div>
+    Army Book Name:
+    <input type="text" id="listname" class="user_info_field"></input>
+  </div>
+  <div>
+    <button type="button" onclick="showList()">Load List</button>
+    <input type="file" id="files"></input>
+  </div>
 </div>
 
 <div class="focal_pane">
-  <input type="text" id="username">User Name</input>
-  <input type="text" id="listname">List Name</input>
-  <button type="button" onclick="showList()">Load List</button>
-
   <div>
       <ul class="fancy_list" id="test_list">
       </ul>
@@ -20,9 +27,12 @@
 </div>
 
 <script type="text/javascript">
+  document.getElementById('files').addEventListener('change', loadListFromFile, false);
+
 	var list = document.getElementById( "test_list" );
-  var army_book = [];
-  var army_list = [];
+  var armyBook = [];
+  var armyList = [];
+  var unitViews = [];
 
   function showList() {
     list.innerHTML = "";
@@ -30,6 +40,31 @@
     var listname = document.getElementById( "listname" );
 
     requestJSON( username.value, listname.value );
+  }
+
+  function loadListFromFile( e ) {
+    var files = e.target.files; // FileList object
+
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+      var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = ( function( fileObject ) {
+        return function( e ) { 
+          var JSONObject = JSON.parse( e.target.result );
+          if ( !JSONObject ) {
+            return -1;
+          }
+
+          console.log( JSONObject );
+          addArmyBookToSelectable( JSONObject, document.getElementById( "army_roster" ) );
+        };
+      })( f );
+
+      // Read in the image file as a data URL.
+      reader.readAsText(f);
+    }
   }
 
   function requestJSON( username, listname ) {
@@ -47,37 +82,16 @@
       if ( xmlhttp.readyState == 4 ) {
         xmlDoc = xmlhttp.responseText;
 
-        addArmyBookToSelectable( xmlDoc, document.getElementById( "army_roster" ) );
+        var JSONObject = JSON.parse( xmlDoc );
+        if ( JSONObject.response != "success" ) {
+          return -1;
+        }
+
+        addArmyBookToSelectable( JSONObject.results, document.getElementById( "army_roster" ) );
       }
     }
     xmlhttp.send();
   }
-
-  // function translateJSONToUnitGroups( JSONText ) {
-  //   console.log( JSONText );
-
-  //   var JSONObject = JSON.parse( JSONText );
-
-  //   if ( JSONObject[ 'response' ] == "success" ) {
-  //     var results = JSONObject[ 'results' ];
-  //     var unitGroups = [];
-
-  //     for ( var i = 0; i < results.length; i++ ) {
-  //       var armyList = results[ i ][ 'list' ];
-
-  //       for ( var j = 0; j < armyList.length; j++ ) {
-  //         var unitGroupDict = armyList[ j ];
-          
-
-  //         unitGroups.push( group );
-  //       }
-  //     }
-
-  //     return unitGroups;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   function displayArmyList( unitGroups ) {
     for ( var i = 0; i < unitGroups.length; i++ ) {
@@ -89,23 +103,25 @@
 
   function addUnitGroupToArmyList( unitGroup ) {
       var listElement = document.createElement( 'li' );
+      listElement.className = "army_list"
+      // listElement.style.marginTop = "50px";
+
       list.appendChild( listElement );
 
       var uvc = new UnitViewController( unitGroup, ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+      uvc.removeUnitView = removeUnitView;
       uvc.loadDOM();
+      unitViews.push( uvc );
+
+      armyList.push( unitGroup );
   }
 
-  function addArmyBookToSelectable( JSONDict, selectable ) {
+  function addArmyBookToSelectable( JSONObject, selectable ) {
     // Set the selectable to function properly
     selectable.innerHTML = '';
     selectable.ondblclick = unitGroupSelected;
 
-    var JSONObject = JSON.parse( JSONDict );
-    if ( JSONObject.response != "success" ) {
-      return -1;
-    }
-
-    var unitLists = JSONObject.results;
+    var unitLists = JSONObject;
     var groups = {};
     for ( var j = 0; j < unitLists.length; j++ ) {
       var unitGroups = unitLists[ j ].list;
@@ -128,8 +144,6 @@
   }
 
   function unitGroupSelected( e ) {
-    console.log( armyBook );
-
     console.log( "A unit group was selected: " );
     console.log( armyBook[ e.target.index ] );
 
@@ -180,6 +194,22 @@
       group.units.push( unitObject );
     }
     return group;
+  }
+
+  function removeUnitView( unitView ) {
+    var unitViewIndex = 0;
+
+    // Remove the unit view from the array
+    for ( var i = 0; i < unitView.length; i++ ) {
+      if ( unitViews[ i ] == unitView ) {
+        unitViews.splice( i, 1 );
+        unitViewIndex = i;
+        break;
+      }
+    }
+
+    armyList.splice( unitViewIndex, 1 );
+    unitView.contentView.parentNode.removeChild( unitView.contentView );
   }
 
   //   // Animate everything!

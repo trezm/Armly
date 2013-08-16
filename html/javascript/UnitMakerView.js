@@ -48,6 +48,10 @@ UnitMakerView.prototype.addStatButtonPressed = function( e ) {
 	this.makerViewController.addStatToUnitView( this );
 }
 
+UnitMakerView.prototype.removeStatButtonPressed = function( e ) {
+	this.makerViewController.removeStatFromUnitView( this );
+}
+
 UnitMakerView.prototype.addUnitButtonPressed = function( e ) {
 	this.makerViewController.addUnitToUnitView( this );
 }
@@ -66,9 +70,19 @@ UnitMakerView.prototype.addStatHeaders = function( headers ) {
 
 	// Add 0 for any extra header not already in the stat line
 	for ( var i = 0; i < this.statlines.length; i++ ) {
-		for ( var j = this.statlines[ i ].stats.length; j < this.headerline.length; j++ ) {
-			this.statlines[ i ].stats.push( 0 );
-		}
+		this.statlines[ i ].stats.push( 0 );
+	}
+}
+
+UnitMakerView.prototype.removeStatHeader = function() {
+	this.headerline.splice( this.headerline.length - 1, 1 );
+
+	// Remove any extra header not already in the stat line
+	for ( var i = 0; i < this.statlines.length; i++ ) {
+		console.log( "Statline: " );
+		console.log( this.statlines[ i ] );
+		this.statlines[ i ].stats.splice( this.statlines[ i ].stats.length - 1, 1 );
+		console.log( this.statlines[ i ] );
 	}
 }
 
@@ -115,7 +129,7 @@ UnitMakerView.prototype.refreshView = function() {
 	buttonDiv.style.width = "100%";
 	buttonDiv.style.background = "#000000";
 
-	this.drawAddStatButton( buttonDiv );
+	this.drawAddRemoveStatButtons( buttonDiv );
 	this.drawAddUnitButton( buttonDiv );
 	this.drawRemoveUnitButton( buttonDiv );
 	this.drawGroupNameField( buttonDiv );
@@ -171,7 +185,7 @@ UnitMakerView.prototype.removeOptionFromOptionGroupView = function( optionIndex,
 }
 
 // Drawing methods
-UnitMakerView.prototype.drawAddStatButton = function( parentDiv ) {
+UnitMakerView.prototype.drawAddRemoveStatButtons = function( parentDiv ) {
 	if ( !parentDiv ) {
 		parentDiv = this.getDOMElement();
 	}
@@ -188,6 +202,19 @@ UnitMakerView.prototype.drawAddStatButton = function( parentDiv ) {
 	};
 
 	parentDiv.appendChild( addStatButton );
+
+	// Remove Stat button
+	var removeStatButton = document.createElement( 'input' );
+	removeStatButton.type = "button";
+	removeStatButton.style.cssFloat = "left";
+	removeStatButton.value = "Remove Stat";
+	removeStatButton.style.className = "increase_button";
+	removeStatButton.makerView = this;
+	removeStatButton.onclick = function( e ) {
+		this.makerView.removeStatButtonPressed( e );
+	};
+
+	parentDiv.appendChild( removeStatButton );
 }
 
 UnitMakerView.prototype.drawAddUnitButton = function( parentDiv ) {

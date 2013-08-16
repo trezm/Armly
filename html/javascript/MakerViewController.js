@@ -20,15 +20,24 @@ MakerViewController.prototype.loadDOM = function() {
 		this.makerViewController.addUnitGroupButtonClicked( e );
 	};
 
-	// Add in the save button
+	// Add in the save buttons
 	var saveListButton = document.createElement( "input" );
 	saveListButton.type = "button";
 	saveListButton.style.cssFloat = "right";
-	saveListButton.value = "Save";
+	saveListButton.value = "Save to Cloud";
 	saveListButton.makerViewController = this;
 	saveListButton.onclick = function( e ) {
 		this.makerViewController.saveCurrentListButtonClicked( e );
 	}
+
+	var saveListLocallyButton = document.createElement( "input" );
+	saveListLocallyButton.type = "button";
+	saveListLocallyButton.style.cssFloat = "right";
+	saveListLocallyButton.value = "Save to Desktop";
+	saveListLocallyButton.makerViewController = this;
+	saveListLocallyButton.onclick = function( e ) {
+		this.makerViewController.saveCurrentListLocallyButtonClicked( e );
+	} 
 
 	// Add the username and list name fields
 	this.userNameDiv = document.createElement( 'input' );
@@ -60,6 +69,7 @@ MakerViewController.prototype.loadDOM = function() {
 
 	this.domElement.appendChild( addUnitGroupButton );
 	this.domElement.appendChild( saveListButton );
+	this.domElement.appendChild( saveListLocallyButton );
 
 	this.domElement.controller = this;
 	this.domElement.onkeyup = function() {
@@ -92,6 +102,24 @@ MakerViewController.prototype.addStatToUnitView = function( unitMakerView, statH
 	// Add the columns to the view
 	unitMakerView.addStatHeaders( [statHeader] );
 
+	unitMakerView.refreshView();
+}
+
+MakerViewController.prototype.removeStatFromUnitView = function( unitMakerView ) {
+	// Get the group index
+	var groupIndex = -1;
+	for ( var i = 0; i < this.unitMakerViews.length; i++ ) {
+		if ( this.unitMakerViews[ i ] == unitMakerView ) {
+			groupIndex = i;
+			break;
+		}
+	}
+
+	// Add the stat line to the model, as well as all of the units in the group
+	var unitGroup = this.unitGroups[ groupIndex ];
+	unitGroup.statHeaders.splice( unitGroup.statHeaders.length - 1, 1 );
+
+	unitMakerView.removeStatHeader();
 	unitMakerView.refreshView();
 }
 
@@ -485,4 +513,36 @@ MakerViewController.prototype.saveCurrentListButtonClicked = function( e ) {
 
 	console.log( packetForExport );
 	$.post( '/armylist', packetForExport );
+}
+
+MakerViewController.prototype.saveCurrentListLocallyButtonClicked = function( e ) {
+		// Make sure everything is synced
+	this.updateGroupsBasedOnDOM();
+
+	var unitGroupList = [];
+	for ( var i = 0; i < this.unitGroups.length; i++ ) {
+		unitGroupList.push( this.unitGroups[ i ].toJSON() );
+	}
+
+	var currentTime = new Date();
+	var packetForExport = [{
+		list:unitGroupList,
+		created_at:currentTime.toString(),
+		list_name:this.listNameDiv.value,
+		list_type:"army_book"
+	}];
+
+	// Set all current unit sizes to the minimum size
+	for ( i = 0; i < unitGroupList.length; i++ ) {
+		var unitGroup = unitGroupList[ i ];
+
+		for ( j = 0; j < unitGroup.units.length; j++ ) {
+			unitGroup.units[ j ].currentSize = unitGroup.units[ j ].minSize;
+		}
+	}
+
+	console.log( packetForExport );
+	// Prompt download
+	var blob = new Blob( [JSON.stringify( packetForExport )], {type:'application/json;charset=utf-8'} );
+	document.location = window.URL.createObjectURL( blob );
 }

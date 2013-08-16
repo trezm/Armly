@@ -13,9 +13,13 @@ body {
 	
 }
 
+.user_info_field {
+	margin: 1em 1em 1em 1em;
+	width: 160px;
+}
+
 .focal_pane {
 	width: 700px;
-	background:#333333;
 	color: #DDDDDD;
 	margin-left: auto;
 	margin-right: auto;
@@ -29,8 +33,7 @@ body {
 }
 
 .selectable_list {
-	margin-left: 5%;
-	margin-right: 5%;
+	margin: 1em 1em 0 1em;
 	width: 90%;
 }
 

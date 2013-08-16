@@ -20,6 +20,19 @@ UnitViewController.prototype.loadDOM = function() {
 
 	this.optionViewController = new OptionViewController( allOptions, this );
 	this.contentView.appendChild( this.optionViewController.getDOMElement() );
+
+	// At the very end of the content view add the remove button
+	this.removeButton = document.createElement( 'input' );
+	this.removeButton.type = "button";
+	this.removeButton.style.cssFloat = "right";
+	this.removeButton.value = "-";
+	this.removeButton.style.className = "increase_button";
+	this.removeButton.controller = this;
+	this.removeButton.onclick = function( e ) {
+		this.controller.removeUnitView( this.controller );
+	};
+
+	this.contentView.appendChild( this.removeButton );
 };
 
 UnitViewController.prototype.recalculatePoints = function() {
@@ -65,3 +78,5 @@ UnitViewController.prototype.decreaseUnitSize = function( unit ) {
 
 	this.recalculatePoints();
 };
+
+UnitViewController.prototype.removeUnitView = function( unitViewController ) {};
