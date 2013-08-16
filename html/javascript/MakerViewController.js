@@ -138,11 +138,16 @@ MakerViewController.prototype.removeUnitFromUnitView = function( unitMakerView )
 
 	unitGroup.removeUnit( unit );
 
-	// Add the unit to the view
+	// remove the unit from the view
 	this.removeUnit( unit, unitMakerView );
 
 	// Refresh the view
 	unitMakerView.refreshView();
+
+	// If there are no units left in the group, then remove the group and the maker view.
+	if ( unitGroup.units.length == 0 ) {
+		this.removeUnitGroup( unitGroup );
+	}
 }
 
 MakerViewController.prototype.addOptionGroupToUnitView = function( unitMakerView, optionGroup ) {
@@ -256,6 +261,24 @@ MakerViewController.prototype.addUnitGroup = function( unitGroup ) {
 	}
 
 	unitMakerView.refreshView();
+}
+
+MakerViewController.prototype.removeUnitGroup = function( unitGroup ) {
+	// Get unit group and remove it.
+	var groupIndex = 0;
+	for ( var i = 0; i < this.unitGroups.length; i++ ) {
+		var unitGroupInArray = this.unitGroups[ i ];
+		if ( unitGroupInArray == unitGroup ) {
+			this.unitGroups.splice( i, 1 );
+			groupIndex = i;
+		}
+	}
+
+	// Remove the unitMakerView
+	var domElement = this.unitMakerViews[ groupIndex ].getDOMElement();
+	domElement.parentNode.removeChild( domElement );
+	
+	this.unitMakerViews.splice( groupIndex, 1 );
 }
 
 MakerViewController.prototype.addUnit = function( unit, unitMakerView ) {
@@ -439,9 +462,6 @@ MakerViewController.prototype.saveCurrentListButtonClicked = function( e ) {
 	for ( var i = 0; i < this.unitGroups.length; i++ ) {
 		unitGroupList.push( this.unitGroups[ i ].toJSON() );
 	}
-
-	console.log( "Saved list: " );
-	console.log( unitGroupList );
 
 	var currentTime = new Date();
 	var packetForExport = {
