@@ -7,6 +7,10 @@ function OptionGroupMakerView( makerViewController, unitMakerView ) {
 	this.makerViewController = makerViewController;
 	this.unitMakerView = unitMakerView;
 	this.optionViews = [];
+	this.groupName = "Option Group Name";
+	this.maxConcurrent = 0
+	this.ruleValue = 0;
+	this.ruleIndex = 0;
 }
 
 OptionGroupMakerView.prototype.getDOMElement = function() {
@@ -44,8 +48,10 @@ OptionGroupMakerView.prototype.refreshView = function() {
 
 	// Draw the buttons
 	this.drawAddOptionButton();
+	this.drawGroupNameField();
 	this.drawRuleTypeSelector();
 	this.drawRuleTypeField();
+	this.drawMaxConcurrentField();
 
 	// Redraw all options
 	for ( var i = 0; i < this.optionViews.length; i++ ) {
@@ -89,6 +95,7 @@ OptionGroupMakerView.prototype.drawRuleTypeSelector = function() {
 		this.ruleTypeSelector.appendChild( option );
 	}
 
+	this.ruleTypeSelector.selectedIndex = this.ruleIndex;
 	this.getDOMElement().appendChild( this.ruleTypeSelector );
 }
 
@@ -102,10 +109,40 @@ OptionGroupMakerView.prototype.drawRuleTypeField = function() {
 	this.ruleFieldDiv.style.marginLeft = "calc(" + GENERAL_BUFFER + " - 1px)";
 	this.ruleFieldDiv.style.marginRight = "calc(" + GENERAL_BUFFER + " - 1px)";
 	this.ruleFieldDiv.style.background = "#333333";
-	this.ruleFieldDiv.value = this.max;
-	this.ruleFieldDiv.setAttribute( 'title', "Option Maximum" );
+	this.ruleFieldDiv.value = this.ruleValue;
+	this.ruleFieldDiv.setAttribute( 'title', "Rule Value" );
 	this.ruleFieldDiv.disabled = this.shouldRuleFieldBeDisabled();
 	this.getDOMElement().appendChild( this.ruleFieldDiv );
+}
+
+OptionGroupMakerView.prototype.drawMaxConcurrentField = function() {
+	// Draw input field
+	this.maxConcurrentDiv = document.createElement( 'input' );
+	this.maxConcurrentDiv.style.color = OPTION_FONT_COLOR;
+	this.maxConcurrentDiv.style.cssFloat = "left";
+	this.maxConcurrentDiv.style.border = "1px solid " + UNIT_BORDER_COLOR;
+	this.maxConcurrentDiv.style.width = OPTION_RULE_FIELD_PERCENTAGE - 2 * GENERAL_BUFFER + "%"
+	this.maxConcurrentDiv.style.marginLeft = "calc(" + GENERAL_BUFFER + " - 1px)";
+	this.maxConcurrentDiv.style.marginRight = "calc(" + GENERAL_BUFFER + " - 1px)";
+	this.maxConcurrentDiv.style.background = "#333333";
+	this.maxConcurrentDiv.value = this.maxConcurrent;
+	this.maxConcurrentDiv.setAttribute( 'title', "Option Group Maximum" );
+	this.getDOMElement().appendChild( this.maxConcurrentDiv );
+}
+
+OptionGroupMakerView.prototype.drawGroupNameField = function() {
+	// Draw input field
+	this.groupNameDiv = document.createElement( 'input' );
+	this.groupNameDiv.style.color = OPTION_FONT_COLOR;
+	this.groupNameDiv.style.cssFloat = "left";
+	this.groupNameDiv.style.border = "1px solid " + UNIT_BORDER_COLOR;
+	this.groupNameDiv.style.width = OPTION_RULE_FIELD_PERCENTAGE - 2 * GENERAL_BUFFER + "%"
+	this.groupNameDiv.style.marginLeft = "calc(" + GENERAL_BUFFER + " - 1px)";
+	this.groupNameDiv.style.marginRight = "calc(" + GENERAL_BUFFER + " - 1px)";
+	this.groupNameDiv.style.background = "#333333";
+	this.groupNameDiv.value = this.groupName;
+	this.groupNameDiv.setAttribute( 'title', "Option Maximum" );
+	this.getDOMElement().appendChild( this.groupNameDiv );
 }
 
 // Check whether value field should be enabled/disabled

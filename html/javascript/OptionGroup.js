@@ -9,7 +9,7 @@ function OptionGroup( name, maxConcurrent, options, rule ) {
 	this.maxConcurrent = maxConcurrent;
 	this.options = options;
 
-	rule ? this.rule = rule : this.rule = { "type" : Rules.NORMAL, "value" : 0 };
+	rule ? this.rule = rule : this.rule = { "name" : Rules.NORMAL, "value" : 0 };
 
 	// Set all of the options to know their proper group
 	for ( var i = 0; i < options.length; i++ ) {
@@ -24,6 +24,7 @@ function OptionGroup( name, maxConcurrent, options, rule ) {
 }
 
 OptionGroup.prototype.addOption = function( option ) {
+	option.group = this;
 	this.options.push( option );
 };
 

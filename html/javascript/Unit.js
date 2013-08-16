@@ -10,10 +10,10 @@ function Unit( name, stats, options, minSize, maxSize, currentSize, cost ) {
 		this.options[ i ].setUnit( this );
 	}
 
-	this.minSize = minSize;
-	this.maxSize = maxSize;
-	this.currentSize = currentSize;
-	this.cost = cost;
+	this.minSize = Number( minSize );
+	this.maxSize = Number( maxSize );
+	this.currentSize = Number( currentSize );
+	this.cost = Number( cost ); 
 }
 
 Unit.prototype.addOptionGroup = function( optionGroup ) {

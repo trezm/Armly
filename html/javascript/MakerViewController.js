@@ -62,7 +62,7 @@ MakerViewController.prototype.loadDOM = function() {
 	this.domElement.appendChild( saveListButton );
 
 	this.domElement.controller = this;
-	this.domElement.onkeydown = function() {
+	this.domElement.onkeyup = function() {
 		this.controller.updateGroupsBasedOnDOM();
 	}
 
@@ -310,9 +310,11 @@ MakerViewController.prototype.updateGroupsBasedOnDOM = function() {
 
 		// Update group name
 		unitGroup.groupName = unitMakerView.groupNameDiv.value;
+		unitMakerView.groupName = unitGroup.groupName;
 
 		// Update group type
 		unitGroup.groupType = unitMakerView.groupTypeDiv.value;
+		unitMakerView.groupType = unitGroup.groupType;
 
 		// Update unit group headers
 		var updatedHeaders = [];
@@ -320,51 +322,98 @@ MakerViewController.prototype.updateGroupsBasedOnDOM = function() {
 			updatedHeaders.push( unitMakerView.unitHeaders[ j ].value );
 		}
 		unitGroup.statHeaders = updatedHeaders;
+		unitMakerView.headerLine = unitGroup.statHeaders;
 
 		// Update unit names
+		var alteredNames = []
 		for ( var j = 0; j < unitMakerView.unitNames.length; j++ ) {
 			if ( unitGroup.units[ j ] != undefined ) {
 				unitGroup.units[ j ].name = unitMakerView.unitNames[ j ].value;
+				alteredNames.push([ unitGroup.units[ j ].name ]);
 			}
 		}
+		unitMakerView.statlines[ 'name' ] = alteredStatLines;
 
 		// Update unit min/maxes
+		var alteredMins = [];
 		for ( var j = 0; j < unitMakerView.unitMins.length; j++ ) {
 			if ( unitGroup.units[ j ] != undefined ) {
 				unitGroup.units[ j ].minSize = unitMakerView.unitMins[ j ].value;
-				unitGroup.units[ j ].maxSize = unitMakerView.unitMaxes[ j ].value;				
+				unitGroup.units[ j ].maxSize = unitMakerView.unitMaxes[ j ].value;
+
+				alteredMins.push( { "min":unitGroup.units[ j ].minSize,
+									"max":unitGroup.units[ j ].maxSize } );
 			}
 		}
+		unitMakerView.unitMinsAndMaxes = alteredMins;
 
 		// Update unit stats
+		var alteredStatLines = []
 		for ( var j = 0; j < unitMakerView.unitNames.length; j++ ) {
 			var unitStatLine = unitMakerView.unitStats[ j ];
 			var newUnitStats = [];
+			alteredStatLines.push( [] );
 			for ( var k = unitStatLine.length - 1; k > -1; k-- ) {
 				newUnitStats.push( unitStatLine[ k ].value );
+				alteredStatLines[ j ].push( unitStatLine[ k ].value );
 			}
 
 			unitGroup.units[ j ].stats = newUnitStats;
 		}
+		unitMakerView.statlines[ 'stats' ] = alteredStatLines;
+
+		// // Update option groups
+		// for ( var j = 0; j < unitMakerView.unitOptionGroups.length; j++ ) {
+		// 	// Get the option group and update it
+		// 	var optionGroup = unitGroup.units[ 0 ].options[ j ];
+		// 	var optionGroupViews = unitMakerView.unitOptionGroups[ j ];	
+
+		// 	console.log( optionGroupViews );
+
+		// 	optionGroup.rule = { "name":optionGroupViews.rule.type.options[ optionGroupViews.rule.type.selectedIndex ].value,
+		// 						 "value":optionGroupViews.rule.value.value };
+		// 	optionGroup.name = optionGroupViews.name;
+		// 	optionGroup.maxConcurrent = optionGroupViews.maxConcurrent;
+
+		// 	// Update the options
+		// 	for ( var k = 0; k < optionGroup.options.length; k++ ) {
+		// 		var option = optionGroup.options[ k ];
+		// 		option.name = optionGroupViews.options[ k ].name.value;
+		// 		option.min =  optionGroupViews.options[ k ].min.value;
+		// 		option.max =  optionGroupViews.options[ k ].max.value;
+		// 		option.cost = optionGroupViews.options[ k ].cost.value;
+		// 	}
+		// }
 
 		// Update option groups
 		for ( var j = 0; j < unitMakerView.unitOptionGroups.length; j++ ) {
 			// Get the option group and update it
 			var optionGroup = unitGroup.units[ 0 ].options[ j ];
-			var optionGroupViews = unitMakerView.unitOptionGroups[ j ];	
+			var optionGroupView = unitMakerView.optionGroupViews[ j ];
 
-			optionGroup.rule = { "name":optionGroupViews.rule.type.options[ optionGroupViews.rule.type.selectedIndex ].value,
-								 "value":optionGroupViews.rule.value.value };
-			optionGroup.name = optionGroupViews.name;
-			optionGroup.maxConcurrent = optionGroupViews.maxConcurrent;
+			optionGroup.rule = { "name":optionGroupView.ruleTypeSelector.options[ optionGroupView.ruleTypeSelector.selectedIndex ].value,
+								 "value":optionGroupView.ruleFieldDiv.value };
+			optionGroupView.ruleIndex = optionGroupView.ruleTypeSelector.selectedIndex;
+			optionGroupView.ruleValue = optionGroupView.ruleFieldDiv.value;
+
+			optionGroup.name = optionGroupView.groupNameDiv.value;
+			optionGroupView.groupName = optionGroup.name;
+
+			optionGroup.maxConcurrent = optionGroupView.maxConcurrentDiv.value;
+			optionGroupView.maxConcurrent = optionGroup.maxConcurrent;
 
 			// Update the options
 			for ( var k = 0; k < optionGroup.options.length; k++ ) {
 				var option = optionGroup.options[ k ];
-				option.name = optionGroupViews.options[ k ].name.value;
-				option.min =  optionGroupViews.options[ k ].min.value;
-				option.max =  optionGroupViews.options[ k ].max.value;
-				option.cost = optionGroupViews.options[ k ].cost.value;
+				option.name = optionGroupView.optionViews[ k ].nameDiv.value;
+				option.min =  optionGroupView.optionViews[ k ].minDiv.value;
+				option.max =  optionGroupView.optionViews[ k ].maxDiv.value;
+				option.cost = optionGroupView.optionViews[ k ].costDiv.value;
+
+				optionGroupView.optionViews[ k ].optionName = option.name;
+				optionGroupView.optionViews[ k ].min = option.min;
+				optionGroupView.optionViews[ k ].max = option.max;
+				optionGroupView.optionViews[ k ].cost = option.cost;
 			}
 		}
 	}
@@ -388,8 +437,20 @@ MakerViewController.prototype.saveCurrentListButtonClicked = function( e ) {
 		list:{
 			list:unitGroupList,
 			created_at:currentTime.toString(),
-			list_name:this.listNameDiv.value}
-		};
+			list_name:this.listNameDiv.value,
+			list_type:"army_book"
+		}
+	};
+
+	// Set all current unit sizes to the minimum size
+	for ( i = 0; i < unitGroupList.length; i++ ) {
+		var unitGroup = unitGroupList[ i ];
+
+		for ( j = 0; j < unitGroup.units.length; j++ ) {
+			unitGroup.units[ j ].currentSize = unitGroup.units[ j ].minSize;
+		}
+	}
+
 	console.log( packetForExport );
 	$.post( '/armylist', packetForExport );
 }

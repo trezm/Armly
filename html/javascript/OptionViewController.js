@@ -48,9 +48,12 @@ OptionViewController.prototype.optionUpdated = function( optionView, option, fla
 	// Find the option group
 	var optionGroup = option.group;
 
+	console.log( optionGroup );
 	// This code handles a max concurrent of 1, i.e. checkboxes
 	if ( optionGroup.maxConcurrent == 1 ||
-		 optionGroup.rule.type == Rules.ALLORNOTHING ) {
+		 optionGroup.rule.name == Rules.ALLORNOTHING ) {
+		console.log( "All or nothing rule!" );
+
 		// Find all other options in the option group and disable them.
 		for ( var i = 0; i < optionGroup.options.length; i++ ) {
 			var i_option = optionGroup.options[ i ];
@@ -95,13 +98,13 @@ OptionViewController.prototype.optionUpdated = function( optionView, option, fla
 
 	// This code handles when there is a limit effected by other selections
 	} else {
-		if ( flags.increase ) {
-			this.option.setCount( this.option.currentCount + 1 );
-		} else {
-			this.option.setCount( this.option.currentCount - 1 );
-		}
+		// if ( flags.increase ) {
+		// 	this.option.setCount( this.option.currentCount + 1 );
+		// } else {
+		// 	this.option.setCount( this.option.currentCount - 1 );
+		// }
 
-		optionView.selector.innerHTML = option.currentCount + "x ";
+		// optionView.selector.innerHTML = option.currentCount + "x ";
 	}
 
 	optionView.controller.unitViewController.recalculatePoints();

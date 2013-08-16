@@ -61,7 +61,7 @@ UnitView.prototype.addDomElements = function() {
 		unitSizeContainer.style.color = TOP_COLOR;
 		unitSizeContainer.style.paddingLeft = "10px";
 		unitSizeContainer.style.paddingRight = "10px";
-		unitSizeContainer.innerHTML = "Unit Size: " + unitSize;
+		unitSizeContainer.innerHTML = "Unit Size: " + this.units[ i ].currentSize;
 
 		unitSizeParent.appendChild( unitSizeContainer );
 		unitSizeParent.appendChild( decreaseUnitSize );

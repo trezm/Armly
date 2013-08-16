@@ -13,7 +13,7 @@ function OptionView( option, optionColor ) {
 		checkbox.optionView = this;
 		this.option.currentCount == 1 ? checkbox.checked = true : checkbox.checked = false;
 		checkbox.onchange = function( e ) {
-			this.optionView.updateOption();
+			this.optionView.updateOption( {rule:O_Type.CHECKBOX} );
 			// this.checked ? this.optionView.setEnabled() : this.optionView.setDisabled();
 		}
 
