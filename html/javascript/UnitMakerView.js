@@ -13,6 +13,7 @@ function UnitMakerView( MakerViewController ) {
 	this.statlines = [];
 	this.unitMinsAndMaxes = [];
 	this.optionGroupViews = [];
+	this.costs = [];
 
 	// These arrays will keep the text fields
 	this.unitNames = [];
@@ -22,6 +23,7 @@ function UnitMakerView( MakerViewController ) {
 	this.unitOptionGroups = [];
 	this.unitMins = [];
 	this.unitMaxes = [];
+	this.unitCosts = [];
 
 	this.groupName = "???";
 	this.groupType = "Troops";
@@ -86,6 +88,14 @@ UnitMakerView.prototype.removeMinMax = function() {
 	this.unitMinsAndMaxes.splice( this.unitMinsAndMaxes.length - 1, 1 );
 }
 
+UnitMakerView.prototype.addCost = function( cost ) {
+	this.costs.push( cost );
+}
+
+UnitMakerView.prototype.removeCost = function() {
+	this.costs.splice( this.costs.length - 1, 1 );
+}
+
 UnitMakerView.prototype.addOptionGroup = function( optionGroup ) {
 	var optionGroupMakerView = new OptionGroupMakerView( this.makerViewMakerController, this );
 
@@ -124,6 +134,7 @@ UnitMakerView.prototype.refreshView = function() {
 		this.drawStatHeaders( this.headerline );
 	}
 	this.drawMinMaxHeaders();
+	this.drawCostHeader();
 	this.forceReflow( this.getDOMElement() );
 
 	// Redraw stat lines
@@ -131,10 +142,12 @@ UnitMakerView.prototype.refreshView = function() {
 	this.unitNames = [];
 	this.unitMins = [];
 	this.unitMaxes = [];
+	this.unitCosts = [];
 	for ( var i = 0; i < this.statlines.length; i++ ) {
 		this.drawUnitName( this.statlines[ i ] );
 		this.drawStatLine( this.statlines[ i ] );
 		this.drawMinMaxFields( this.unitMinsAndMaxes[ i ] );
+		this.drawCostField( this.costs[ i ] );
 		this.forceReflow( this.getDOMElement() );
 	}
 
@@ -321,6 +334,22 @@ UnitMakerView.prototype.drawMinMaxHeaders = function() {
 	this.getDOMElement().appendChild( this.minDiv );
 }
 
+UnitMakerView.prototype.drawCostHeader = function() {
+	this.costDiv = document.createElement( 'div' );
+	this.costDiv.style.color = UNIT_FONT_COLOR;
+	this.costDiv.style.cssFloat = "right";
+	this.costDiv.style.width = UNIT_MINMAX_PERCENTAGE - UNIT_STAT_LEFT_MARGIN - UNIT_STAT_RIGHT_MARGIN + "%";
+	this.costDiv.style.textAlign = "center";
+	this.costDiv.style.marginLeft = "calc(" + UNIT_STAT_LEFT_MARGIN + "% - 1px)";
+	this.costDiv.style.marginRight = "calc(" + UNIT_STAT_RIGHT_MARGIN + "% - 1px)";
+	this.costDiv.style.textAlign = "center";
+	this.costDiv.style.background = "#333333";
+	this.costDiv.innerHTML = "cost";
+	this.costDiv.title = "Enter the price per model here.";
+
+	this.getDOMElement().appendChild( this.costDiv );
+}
+
 UnitMakerView.prototype.drawMinMaxFields = function( minMaxDict ) {
 	var maxDiv = document.createElement( 'input' );
 	maxDiv.style.color = UNIT_FONT_COLOR;
@@ -351,6 +380,23 @@ UnitMakerView.prototype.drawMinMaxFields = function( minMaxDict ) {
 
 	this.getDOMElement().appendChild( minDiv );
 	this.unitMins.push( minDiv );
+}
+
+UnitMakerView.prototype.drawCostField = function( cost ) {
+	var costDiv = document.createElement( 'input' );
+	costDiv.style.color = UNIT_FONT_COLOR;
+	costDiv.style.cssFloat = "right";
+	costDiv.style.border = "1px solid " + UNIT_BORDER_COLOR;
+	costDiv.style.width = UNIT_MINMAX_PERCENTAGE - UNIT_STAT_LEFT_MARGIN - UNIT_STAT_RIGHT_MARGIN + "%";
+	costDiv.style.textAlign = "center";
+	costDiv.style.marginLeft = "calc(" + UNIT_STAT_LEFT_MARGIN + "% - 2px)";
+	costDiv.style.marginRight = "calc(" + UNIT_STAT_RIGHT_MARGIN + "% - 2px)";
+	costDiv.style.textAlign = "center";
+	costDiv.style.background = "#333333";
+	costDiv.value = cost;
+
+	this.getDOMElement().appendChild( costDiv );
+	this.unitCosts.push( costDiv );
 }
 
 UnitMakerView.prototype.drawUnitName = function( statline ) {

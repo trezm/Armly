@@ -261,6 +261,7 @@ MakerViewController.prototype.addUnitGroup = function( unitGroup ) {
 MakerViewController.prototype.addUnit = function( unit, unitMakerView ) {
 	unitMakerView.addStatLine( unit );
 	unitMakerView.addMinMax( { min: unit.minSize, max: unit.maxSize } );
+	unitMakerView.addCost( unit.cost );
 
 	var unitMakerViewDOMElement = unitMakerView.getDOMElement();
 	unitMakerViewDOMElement.style.cssFloat = "left";
@@ -346,6 +347,17 @@ MakerViewController.prototype.updateGroupsBasedOnDOM = function() {
 			}
 		}
 		unitMakerView.unitMinsAndMaxes = alteredMins;
+
+		// Update unit costs
+		var alteredCosts = [];
+		for ( var j = 0; j < unitMakerView.unitCosts.length; j++ ) {
+			if ( unitGroup.units[ j ] != undefined ) {
+				unitGroup.units[ j ].cost = unitMakerView.unitCosts[ j ].value;
+
+				alteredCosts.push( unitGroup.units[ j ].cost );
+			}
+		}
+		unitMakerView.costs = alteredCosts;
 
 		// Update unit stats
 		var alteredStatLines = []
