@@ -1,0 +1,199 @@
+
+<div class="right_bar">
+    <select id="army_roster" class="selectable_list" size=10>
+    </select>
+</div>
+
+<div class="left_bar">
+    blah blah blah
+</div>
+
+<div class="focal_pane">
+  <input type="text" id="username">User Name</input>
+  <input type="text" id="listname">List Name</input>
+  <button type="button" onclick="showList()">Load List</button>
+
+  <div>
+      <ul class="fancy_list" id="test_list">
+      </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+	var list = document.getElementById( "test_list" );
+  var army_book = [];
+  var army_list = [];
+
+  function showList() {
+    list.innerHTML = "";
+    var username = document.getElementById( "username" );
+    var listname = document.getElementById( "listname" );
+
+    requestJSON( username.value, listname.value );
+  }
+
+  function requestJSON( username, listname ) {
+    // Make an XML request
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp = new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("GET","armylist/" + escape( username ) + "/army_book/" + escape( listname ),false);
+    xmlhttp.onreadystatechange = function() {
+      if ( xmlhttp.readyState == 4 ) {
+        xmlDoc = xmlhttp.responseText;
+
+        addArmyBookToSelectable( xmlDoc, document.getElementById( "army_roster" ) );
+      }
+    }
+    xmlhttp.send();
+  }
+
+  // function translateJSONToUnitGroups( JSONText ) {
+  //   console.log( JSONText );
+
+  //   var JSONObject = JSON.parse( JSONText );
+
+  //   if ( JSONObject[ 'response' ] == "success" ) {
+  //     var results = JSONObject[ 'results' ];
+  //     var unitGroups = [];
+
+  //     for ( var i = 0; i < results.length; i++ ) {
+  //       var armyList = results[ i ][ 'list' ];
+
+  //       for ( var j = 0; j < armyList.length; j++ ) {
+  //         var unitGroupDict = armyList[ j ];
+          
+
+  //         unitGroups.push( group );
+  //       }
+  //     }
+
+  //     return unitGroups;
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  function displayArmyList( unitGroups ) {
+    for ( var i = 0; i < unitGroups.length; i++ ) {
+      var unitGroup = unitGroups[ i % unitGroups.length ];
+
+      addUnitGroupToArmyList( unitGroup );
+    }
+  }
+
+  function addUnitGroupToArmyList( unitGroup ) {
+      var listElement = document.createElement( 'li' );
+      list.appendChild( listElement );
+
+      var uvc = new UnitViewController( unitGroup, ["WS","BS","S","T","W","I","A","Ld","Sv"], listElement );
+      uvc.loadDOM();
+  }
+
+  function addArmyBookToSelectable( JSONDict, selectable ) {
+    // Set the selectable to function properly
+    selectable.innerHTML = '';
+    selectable.ondblclick = unitGroupSelected;
+
+    var JSONObject = JSON.parse( JSONDict );
+    if ( JSONObject.response != "success" ) {
+      return -1;
+    }
+
+    var unitLists = JSONObject.results;
+    var groups = {};
+    for ( var j = 0; j < unitLists.length; j++ ) {
+      var unitGroups = unitLists[ j ].list;
+      armyBook = unitGroups;
+
+      for ( var i = 0; i < unitGroups.length; i++ ) {
+        var unitGroup = unitGroups[ i ];
+        var optionGroup = groups[ unitGroups.groupType ];
+        if ( !optionGroup ) {
+          optionGroup = document.createElement( 'optgroup' );
+          optionGroup.label = unitGroup.groupType;
+          selectable.appendChild( optionGroup );
+        }
+
+        var listElement = document.createElement( 'option' );
+        listElement.innerHTML = unitGroup.groupName;
+        optionGroup.appendChild( listElement );
+      }
+    }
+  }
+
+  function unitGroupSelected( e ) {
+    console.log( armyBook );
+
+    console.log( "A unit group was selected: " );
+    console.log( armyBook[ e.target.index ] );
+
+    addUnitGroupToArmyList( unitGroupFromDictionary( armyBook[ e.target.index ] ) );
+  }
+
+  function unitGroupFromDictionary( unitGroupDict ) {
+    var group = new UnitGroup( [], 
+                               unitGroupDict[ 'statHeaders' ], 
+                               unitGroupDict[ 'groupName' ],
+                               unitGroupDict[ 'groupType' ] );
+    for ( var u = 0; u < unitGroupDict[ "units" ].length; u++ ) {
+      var unit = unitGroupDict[ "units" ][ u ];
+
+      var unitObject = new Unit( unit[ 'name' ],
+                                 unit[ 'stats' ],
+                                 [],
+                                 unit[ 'minSize' ],
+                                 unit[ 'maxSize' ],
+                                 unit[ 'currentSize' ],
+                                 unit[ 'cost' ] );
+
+      if ( unit[ 'options' ] ) {
+        for ( var og = 0; og < unit[ 'options' ].length; og++ ) {
+          var optionGroup = unit[ 'options' ][ og ];
+
+          var optionGroupObject = new OptionGroup( optionGroup[ 'name' ],
+                                                   optionGroup[ 'maxConcurrent' ],
+                                                   [],
+                                                   optionGroup[ 'rule' ] );
+
+          for ( var o = 0; o < optionGroup[ 'options' ].length; o++ ) {
+            var option = optionGroup[ 'options' ][ o ];
+
+            var optionObject = new Option( option[ 'name' ],
+                                           option[ 'description' ],
+                                           option[ 'min' ],
+                                           option[ 'max' ],
+                                           option[ 'currentCount' ],
+                                           option[ 'cost' ] );
+            optionGroupObject.addOption( optionObject );
+          }
+
+          unitObject.addOptionGroup( optionGroupObject );
+        }
+      }
+
+      group.units.push( unitObject );
+    }
+    return group;
+  }
+
+  //   // Animate everything!
+  // for ( var i = 0; i < list.children.length; i++ ) {
+  //   var listElement = list.children[ i ];
+
+  //   listElement.style.marginLeft = "-1000px";
+  //   listElement.style.width = "1000px";
+  //   listElement.style.opacity = 0.0;
+
+  //     $( list.children[ i ] ).delay( i * 150 ).animate( {
+  //         marginLeft: "10px",
+  //         opacity: 1.5
+  //     }, 1000 );
+  //   }
+
+</script>
