@@ -134,6 +134,8 @@
           optionGroup = document.createElement( 'optgroup' );
           optionGroup.label = unitGroup.groupType;
           selectable.appendChild( optionGroup );
+
+          groups[ unitGroups.groupType ] = optionGroup;
         }
 
         var listElement = document.createElement( 'option' );
